@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GameHub — игровой магазин</title>
+<style>
+:root{
+  --bg:#171a21;--panel:#1b2838;--panel2:#202d3d;--blue:#1a9fff;
+  --blue2:#66c0f4;--text:#e5e7eb;--muted:#8f98a5;--green:#a4d007;
+  --border:#304258;--shadow:0 12px 35px #0008;
+}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#171a21,#101318);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input,select{font:inherit} button{cursor:pointer}
+.header{height:72px;background:#171d25;border-bottom:1px solid #263548;display:flex;align-items:center;padding:0 5%;gap:28px;position:sticky;top:0;z-index:50;box-shadow:0 3px 20px #0008}
+.logo{font-size:25px;font-weight:800;letter-spacing:.5px;color:white;white-space:nowrap}.logo span{color:var(--blue2)}
+.nav{display:flex;gap:20px}.nav button{background:none;border:0;color:#d6d7d8;padding:25px 4px;font-size:15px}.nav button.active,.nav button:hover{color:#fff;border-bottom:3px solid var(--blue2)}
+.search{margin-left:auto;display:flex;background:#101820;border:1px solid #34475a;border-radius:4px;overflow:hidden;width:min(330px,35vw)}.search input{width:100%;background:transparent;border:0;outline:0;color:#fff;padding:11px 13px}.search button{background:#1a9fff;border:0;color:#07131c;padding:0 16px;font-weight:bold}
+.account{position:relative}.account>button{border:0;background:#243447;color:#fff;padding:10px 13px;border-radius:4px}.dropdown{display:none;position:absolute;right:0;top:45px;background:#202d3d;border:1px solid var(--border);min-width:190px;box-shadow:var(--shadow);padding:7px}.dropdown button{display:block;width:100%;background:none;border:0;text-align:left;color:#ddd;padding:11px;border-radius:3px}.dropdown button:hover{background:#30445b}.account.open .dropdown{display:block}
+.container{width:min(1250px,92%);margin:auto}.hero{margin-top:25px;position:relative;height:390px;border-radius:8px;overflow:hidden;background:#20344a;box-shadow:var(--shadow)}.slide{height:100%;display:none;position:relative}.slide.active{display:block}.slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.6)}.slide-content{position:absolute;left:6%;bottom:42px;width:min(550px,75%);text-shadow:0 2px 8px #000}.slide h1{font-size:42px;margin:0 0 12px}.slide p{font-size:17px;color:#e5e7eb;line-height:1.45}.sale{display:inline-block;background:#a4d007;color:#152000;font-weight:bold;padding:7px 10px;border-radius:3px}.price{margin-top:14px;font-size:24px}.old{text-decoration:line-through;color:#999;font-size:15px;margin-right:8px}.hero-controls{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;pointer-events:none}.hero-controls button{pointer-events:auto;border:0;background:#0008;color:#fff;width:44px;height:60px;font-size:30px}.dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:7px}.dot{width:10px;height:10px;border-radius:50%;background:#718096;border:0}.dot.active{background:#fff}
+.section{padding:30px 0}.section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}.section-title h2{margin:0;font-size:23px}.toolbar{display:flex;gap:10px}.toolbar select{background:#101820;color:#ddd;border:1px solid #405267;padding:9px;border-radius:4px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:var(--panel);border:1px solid #26394d;border-radius:5px;overflow:hidden;transition:.2s;box-shadow:0 5px 15px #0004}.card:hover{transform:translateY(-4px);border-color:#4b7194;box-shadow:var(--shadow)}.cover{height:190px;background-size:cover;background-position:center}.card-body{padding:12px}.card h3{margin:0 0 8px;font-size:16px}.meta{color:var(--muted);font-size:12px;margin-bottom:12px}.card-bottom{display:flex;align-items:center;justify-content:space-between}.game-price{font-weight:bold}.discount{background:#4c6b22;color:#b4d455;padding:5px 7px;margin-right:5px}.buy{background:#1a9fff;border:0;color:#fff;padding:7px 11px;border-radius:3px}.buy:hover{background:#45b4ff}
+.pager{display:flex;justify-content:center;gap:6px;margin-top:25px}.pager button{background:#202d3d;border:1px solid #34475a;color:#ddd;padding:9px 13px;border-radius:3px}.pager button.active,.pager button:hover{background:#1a9fff;color:#fff}
+.view{display:none}.view.active{display:block}.library{min-height:500px}.empty{background:var(--panel);padding:50px;text-align:center;color:var(--muted);border:1px solid var(--border)}
+.settings{display:grid;grid-template-columns:220px 1fr;gap:18px}.settings-menu,.settings-content{background:var(--panel);border:1px solid var(--border);border-radius:5px}.settings-menu button{width:100%;background:none;border:0;border-bottom:1px solid #293b4d;color:#bbb;text-align:left;padding:14px}.settings-menu button.active,.settings-menu button:hover{background:#26394d;color:#fff}.setting-page{display:none;padding:25px}.setting-page.active{display:block}.setting-page h2{margin-top:0}.row{padding:17px 0;border-bottom:1px solid #304258;display:flex;justify-content:space-between;gap:20px;align-items:center}.row:last-child{border-bottom:0}.row small{display:block;color:var(--muted);margin-top:5px}.switch{width:48px;height:25px;background:#465668;border:0;border-radius:20px;position:relative}.switch:after{content:"";position:absolute;width:19px;height:19px;top:3px;left:4px;background:#fff;border-radius:50%;transition:.2s}.switch.on{background:#1a9fff}.switch.on:after{left:25px}.action{background:#1a9fff;color:#fff;border:0;padding:9px 14px;border-radius:3px}.danger{background:#8b3030}.method{background:#202d3d;border:1px solid #405267;padding:14px;margin:10px 0;border-radius:4px;display:flex;justify-content:space-between}.toast{position:fixed;bottom:20px;right:20px;background:#243447;border:1px solid #4d6c89;padding:14px 18px;border-radius:5px;box-shadow:var(--shadow);display:none;z-index:100}.toast.show{display:block}
+@media(max-width:900px){.header{gap:12px;padding:0 3%}.nav{gap:8px}.nav button{font-size:13px}.search{width:180px}.grid{grid-template-columns:repeat(2,1fr)}.hero{height:330px}.slide h1{font-size:32px}.settings{grid-template-columns:1fr}}
+@media(max-width:600px){.header{height:auto;min-height:65px;flex-wrap:wrap;padding:10px 4%}.nav{order:3;width:100%;justify-content:space-between}.nav button{padding:9px 3px}.search{margin-left:0;flex:1;width:auto}.account{margin-left:auto}.hero{height:300px}.slide h1{font-size:26px}.slide p{font-size:14px}.grid{grid-template-columns:1fr}.cover{height:210px}.section-title{align-items:flex-start;gap:10px;flex-direction:column}.toolbar{width:100%}.toolbar select{flex:1}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">GAME<span>HUB</span></div>
+  <nav class="nav">
+    <button class="active" data-view="shop">Магазин</button>
+    <button data-view="library">Библиотека</button>
+    <button data-view="community">Сообщество</button>
+  </nav>
+  <div class="search"><input id="search" placeholder="Поиск игр..."><button onclick="render()">⌕</button></div>
+  <div class="account">
+    <button onclick="this.parentElement.classList.toggle('open')">👤 Алексей ▾</button>
+    <div class="dropdown">
+      <button onclick="openSettings()">⚙ Настройки аккаунта</button>
+      <button onclick="showToast('Профиль открыт')">Профиль</button>
+      <button onclick="showToast('Выход выполнен')">Выйти</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+<section id="shop" class="view active">
+  <div class="hero">
+    <div class="slide active"><div class="slide-bg" style="background-image:linear-gradient(90deg,#0b111a 5%,transparent 70%),url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=80')"></div><div class="slide-content"><span class="sale">-60%</span><h1>Cyber Arena</h1><p>Динамичные сражения, огромный мир и тысячи игроков.</p><div class="price"><span class="old">₽1 999</span> ₽799</div></div></div>
+    <div class="slide"><div class="slide-bg" style="background-image:linear-gradient(90deg,#0b111a 5%,transparent 70%),url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1400&q=80')"></div><div class="slide-content"><span class="sale">-40%</span><h1>Night Raiders</h1><p>Исследуй тёмный город и собери собственную команду.</p><div class="price"><span class="old">₽1 499</span> ₽899</div></div></div>
+    <div class="slide"><div class="slide-bg" style="background-image:linear-gradient(90deg,#0b111a 5%,transparent 70%),url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1400&q=80')"></div><div class="slide-content"><span class="sale">-75%</span><h1>Retro Worlds</h1><p>Большое приключение в стиле классических игр.</p><div class="price"><span class="old">₽999</span> ₽249</div></div></div>
+    <div class="hero-controls"><button onclick="moveSlide(-1)">‹</button><button onclick="moveSlide(1)">›</button></div><div class="dots"><button class="dot active" onclick="goSlide(0)"></button><button class="dot" onclick="goSlide(1)"></button><button class="dot" onclick="goSlide(2)"></button></div>
+  </div>
+  <div class="section">
+    <div class="section-title"><h2>Популярные игры</h2><div class="toolbar"><select id="sort" onchange="render()"><option value="popular">По популярности</option><option value="price">По цене</option><option value="date">По дате выхода</option></select></div></div>
+    <div id="grid" class="grid"></div><div id="pager" class="pager"></div>
+  </div>
+</section>
+
+<section id="library" class="view library section"><div class="section-title"><h2>Моя библиотека</h2></div><div id="libraryList" class="grid"></div></section>
+<section id="community" class="view section"><div class="section-title"><h2>Сообщество</h2></div><div class="empty"><h2>Игровое сообщество</h2><p>Здесь будут новости, обсуждения, группы и друзья.</p></div></section>
+
+<section id="settings" class="view section">
+ <div class="section-title"><h2>Настройки аккаунта</h2></div>
+ <div class="settings">
+  <div class="settings-menu">
+   <button class="active" onclick="settingTab('security',this)">🔒 Безопасность</button>
+   <button onclick="settingTab('notifications',this)">🔔 Уведомления</button>
+   <button onclick="settingTab('payments',this)">💳 Платёжные методы</button>
+  </div>
+  <div class="settings-content">
+   <div id="security" class="setting-page active"><h2>Безопасность</h2><div class="row"><div><b>Пароль</b><small>Последнее изменение: недавно</small></div><button class="action" onclick="showToast('Форма смены пароля открыта')">Изменить</button></div><div class="row"><div><b>Двухфакторная защита</b><small>Дополнительная защита аккаунта</small></div><button class="switch" onclick="toggle(this)"></button></div><div class="row"><div><b>Активные сеансы</b><small>Управляйте устройствами, на которых выполнен вход</small></div><button class="action" onclick="showToast('Показаны активные сеансы')">Управлять</button></div></div>
+   <div id="notifications" class="setting-page"><h2>Уведомления</h2><div class="row"><div><b>Скидки и акции</b><small>Сообщать о специальных предложениях</small></div><button class="switch on" onclick="toggle(this)"></button></div><div class="row"><div><b>Новости игр</b><small>Новости из вашей библиотеки</small></div><button class="switch on" onclick="toggle(this)"></button></div><div class="row"><div><b>Сообщения</b><small>Уведомления от друзей и сообщества</small></div><button class="switch on" onclick="toggle(this)"></button></div></div>
+   <div id="payments" class="setting-page"><h2>Платёжные методы</h2><div class="method"><span>💳 Банковская карта •••• 4821</span><button class="action danger" onclick="this.parentElement.remove()">Удалить</button></div><button class="action" onclick="showToast('Добавление способа оплаты')">+ Добавить способ оплаты</button></div>
+  </div>
+ </div>
+</section>
+</main>
+<div id="toast" class="toast"></div>
+
+<script>
+const games=[
+{name:"Cyber Arena",price:799,date:2026,pop:98,disc:60,img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=700&q=80"},
+{name:"Night Raiders",price:899,date:2025,pop:94,disc:40,img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=700&q=80"},
+{name:"Retro Worlds",price:249,date:2024,pop:82,disc:75,img:"https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=700&q=80"},
+{name:"Star Frontier",price:1299,date:2026,pop:91,disc:20,img:"https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=700&q=80"},
+{name:"Racing X",price:599,date:2025,pop:88,disc:50,img:"https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=700&q=80"},
+{name:"Kingdom Rise",price:1499,date:2023,pop:76,disc:30,img:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80"},
+{name:"Tactical Force",price:999,date:2026,pop:96,disc:15,img:"https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=700&q=80"},
+{name:"Pixel Quest",price:399,date:2022,pop:72,disc:70,img:"https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=700&q=80"},
+{name:"Deep Space",price:749,date:2025,pop:86,disc:35,img:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=700&q=80"},
+{name:"Street Legends",price:1099,date:2024,pop:84,disc:25,img:"https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=700&q=80"},
+{name:"Dungeon Zero",price:499,date:2026,pop:79,disc:45,img:"https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?auto=format&fit=crop&w=700&q=80"},
+{name:"Sky Warriors",price:699,date:2023,pop:74,disc:55,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80"}
+];
+let page=1,perPage=8,slide=0;
+function render(){
+ const q=document.getElementById('search').value.toLowerCase(),sort=document.getElementById('sort').value;
+ let a=games.filter(g=>g.name.toLowerCase().includes(q));
+ a.sort((x,y)=>sort==='price'?x.price-y.price:sort==='date'?y.date-x.date:y.pop-x.pop);
+ const pages=Math.max(1,Math.ceil(a.length/perPage)); if(page>pages)page=pages;
+ document.getElementById('grid').innerHTML=a.slice((page-1)*perPage,page*perPage).map(g=>`<article class="card"><div class="cover" style="background-image:url('${g.img}')"></div><div class="card-body"><h3>${g.name}</h3><div class="meta">★ ${g.pop}% · ${g.date}</div><div class="card-bottom"><div><span class="discount">-${g.disc}%</span><span class="game-price">₽${g.price}</span></div><button class="buy" onclick="addGame('${g.name}')">В библиотеку</button></div></div></article>`).join('')||'<div class="empty">Игры не найдены</div>';
+ document.getElementById('pager').innerHTML=Array.from({length:pages},(_,i)=>`<button class="${i+1===page?'active':''}" onclick="page=${i+1};render()">${i+1}</button>`).join('');
+}
+function addGame(name){let b=JSON.parse(localStorage.getItem('library')||'[]');if(!b.includes(name))b.push(name);localStorage.setItem('library',JSON.stringify(b));renderLibrary();showToast(name+' добавлена в библиотеку');}
+function renderLibrary(){let b=JSON.parse(localStorage.getItem('library')||'[]');document.getElementById('libraryList').innerHTML=b.length?b.map(n=>{let g=games.find(x=>x.name===n);return `<article class="card"><div class="cover" style="background-image:url('${g.img}')"></div><div class="card-body"><h3>${g.name}</h3><div class="meta">В вашей библиотеке</div><button class="buy" onclick="showToast('Запуск игры: ${g.name}')">Играть</button></div></article>`}).join(''):'<div class="empty">В библиотеке пока нет игр.<br>Добавьте игру из магазина.</div>'}
+function showView(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===id));if(id==='library')renderLibrary()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+function openSettings(){document.querySelector('.account').classList.remove('open');showView('settings')}
+function settingTab(id,el){document.querySelectorAll('.setting-page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.settings-menu button').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+function toggle(el){el.classList.toggle('on');showToast(el.classList.contains('on')?'Настройка включена':'Настройка выключена')}
+function showToast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+function goSlide(n){slide=n;document.querySelectorAll('.slide').forEach((x,i)=>x.classList.toggle('active',i===slide));document.querySelectorAll('.dot').forEach((x,i)=>x.classList.toggle('active',i===slide))}
+function moveSlide(n){goSlide((slide+n+3)%3)}
+setInterval(()=>moveSlide(1),6000);render();renderLibrary();
+</script>
+</body>
+</html>
